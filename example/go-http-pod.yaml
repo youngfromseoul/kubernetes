@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: http-go
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: http-go
+    image: youngfrom/http-go
+    ports:
+    - containerPort: 8080
+
