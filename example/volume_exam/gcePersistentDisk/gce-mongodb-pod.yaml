@@ -10,7 +10,7 @@ spec:
     - mountPath: /data/db
       name: mongodb
   volumes:
-  - name: test-volume
+  - name: mongodb
     # This GCE PD must already exist.
     gcePersistentDisk:
       pdName: mongodb
