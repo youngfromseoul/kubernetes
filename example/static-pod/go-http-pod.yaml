@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: http-go
+  labels:
+    app: http-go
+spec:
+  containers:
+  - name: http-go
+    image: youngfrom/http-go
+  nodeName: gke-cluster-1-default-pool-fa5384d8-jwza
+
+

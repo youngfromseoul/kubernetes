@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: http-go-gpu
+  labels:
+    app: http-go-gpu
+spec:
+  containers:
+  - name: http-go-gpu
+    image: youngfrom/http-go
+  nodeSelector:
+    gpu: "true"
+
+
