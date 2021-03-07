@@ -1,0 +1,15 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: http-go-policy-v1
+spec:
+  policyTypes:
+  - Ingress
+  podSelector:
+    matchLabels:
+      app: http-go-v1
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: http-go-v2
