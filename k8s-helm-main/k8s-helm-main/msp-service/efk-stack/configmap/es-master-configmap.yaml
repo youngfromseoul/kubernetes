@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: logging
+  name: elasticsearch-master-config
+  labels:
+    app: elasticsearch
+    role: master
+data:
+  elasticsearch.yml: |-
+    cluster.name: ${cluster.name}
+    node.name: ${node.name}
+    discovery.seed_hosts: ${discovery.seed_hosts}
+    cluster.initial_master_nodes: ${cluster.initial_master_nodes}
+    network.host: 0.0.0.0
+    node:
+      master: true
+      data: false
+      ingest: false
+    xpack.security.enabled: true
+    xpack.monitoring.collection.enabled: true
+
+    http://gitlab.ahnlabcloud.com/msp-manage/k8s-helm.git

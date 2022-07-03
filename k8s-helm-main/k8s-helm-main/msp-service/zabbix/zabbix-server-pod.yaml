@@ -1,0 +1,182 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubernetes.io/psp: eks.privileged
+  creationTimestamp: "2022-04-08T09:31:21Z"
+  generateName: zabbix-zabbix-server-
+  labels:
+    app: zabbix-zabbix-server
+    app.kubernetes.io/instance: zabbix-zabbix-server
+    app.kubernetes.io/managed-by: Helm-zabbix-server
+    app.kubernetes.io/name: zabbix-server
+    controller-revision-hash: zabbix-zabbix-server-767fcf8cb
+    helm.sh/chart: zabbix-1.0.0
+    statefulset.kubernetes.io/pod-name: zabbix-zabbix-server-0
+  name: zabbix-zabbix-server-0
+  namespace: zabbix
+  ownerReferences:
+  - apiVersion: apps/v1
+    blockOwnerDeletion: true
+    controller: true
+    kind: StatefulSet
+    name: zabbix-zabbix-server
+    uid: adef4859-06d9-4e67-900a-5f33887fb60b
+  resourceVersion: "11494736"
+  uid: ac22a4e1-e8d5-4e94-8aca-d7efaee7b579
+spec:
+  containers:
+  - env:
+    - name: DB_SERVER_HOST
+      value: zabbix-postgresql
+    - name: DB_SERVER_PORT
+      value: "5432"
+    - name: POSTGRES_USER
+      value: zabbix
+    - name: POSTGRES_PASSWORD
+      value: Ahnlabcloud1004!
+    - name: POSTGRES_DB
+      value: zabbix
+    image: zabbix/zabbix-server-pgsql:ubuntu-6.0.0
+    imagePullPolicy: IfNotPresent
+    name: zabbix-server
+    ports:
+    - containerPort: 10051
+      name: zabbix-server
+      protocol: TCP
+    - containerPort: 10052
+      name: zabbix-jmx
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-hgcmd
+      readOnly: true
+    - mountPath: /usr/lib/zabbix/alertscripts/
+      name: zabbix-alert
+  - env:
+    - name: ZBX_HOSTNAME
+      value: Zabbix server
+    - name: ZBX_SERVER_HOST
+      value: 127.0.0.1
+    - name: ZBX_SERVER_PORT
+      value: "10051"
+    - name: ZBX_PASSIVE_ALLOW
+      value: "true"
+    - name: ZBX_PASSIVESERVERS
+      value: 127.0.0.1
+    - name: ZBX_ACTIVE_ALLOW
+      value: "true"
+    - name: ZBX_ACTIVESERVERS
+    - name: ZBX_DEBUGLEVEL
+    - name: ZBX_TIMEOUT
+    - name: ZBX_LOADMODULE
+    image: zabbix/zabbix-agent:ubuntu-6.0.0
+    imagePullPolicy: IfNotPresent
+    name: zabbix-agent
+    ports:
+    - containerPort: 10050
+      name: zabbix-agent
+      protocol: TCP
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-hgcmd
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  hostname: zabbix-zabbix-server-0
+  nodeName: ip-10-128-128-252.ap-northeast-2.compute.internal
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  subdomain: zabbix
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-hgcmd
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+  - configMap:
+      name: zabbix-alert
+    name: zabbix-alert
+
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2022-04-08T09:31:21Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2022-04-08T09:31:36Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2022-04-08T09:31:36Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2022-04-08T09:31:21Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: docker://da9cf33ab851e695aac14db08ae473bfada1764e63d5dbb6044cf275f6c62695
+    image: zabbix/zabbix-agent:ubuntu-6.0.0
+    imageID: docker-pullable://zabbix/zabbix-agent@sha256:d2ca39042f36a5c25f44357dec8a5a6aebe6883f472f3ad83b44bb4964ccdf98
+    lastState: {}
+    name: zabbix-agent
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2022-04-08T09:31:35Z"
+  - containerID: docker://2567f75f98472a3ea81036379786c0a15f70295e1c6065e079925b29a4f81987
+    image: zabbix/zabbix-server-pgsql:ubuntu-6.0.0
+    imageID: docker-pullable://zabbix/zabbix-server-pgsql@sha256:8e127789c811e8abd697447d519a396afdadcf4a8cae837cafc8fdc1cf395f7d
+    lastState: {}
+    name: zabbix-server
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2022-04-08T09:31:35Z"
+  hostIP: 10.128.128.252
+  phase: Running
+  podIP: 10.128.128.250
+  podIPs:
+  - ip: 10.128.128.250
+  qosClass: BestEffort
+  startTime: "2022-04-08T09:31:21Z"

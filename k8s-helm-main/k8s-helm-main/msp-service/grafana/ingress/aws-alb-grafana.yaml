@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: grafana
+  name: grafana-alb
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/load-balancer-name: "eks-grafana-alb"
+    alb.ingress.kubernetes.io/security-groups: sg-06457d5062f83d4cd
+    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "false"
+    # SSL
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:360230412074:certificate/15bad1f5-bf77-4ebd-a2a7-e79991d13735
+    #alb.ingress.kubernetes.io/ssl-redirect: '443'
+
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: grafana
+              port:
+                number: 3000

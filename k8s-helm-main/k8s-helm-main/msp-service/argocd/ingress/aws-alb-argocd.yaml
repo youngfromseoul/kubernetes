@@ -1,0 +1,38 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: argocd
+  name: argocd-alb
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/group.name: internal-alb
+    alb.ingress.kubernetes.io/group.order: "4"
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    #alb.ingress.kubernetes.io/tags: createdBy=aws-load-balancer-controller
+    alb.ingress.kubernetes.io/load-balancer-name: "eks-internal-alb"
+    alb.ingress.kubernetes.io/security-groups: sg-024a64ac809643f16
+    alb.ingress.kubernetes.io/manage-backend-security-group-rules: "false"
+    #alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-2016-08
+    # SSL
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:360230412074:certificate/15bad1f5-bf77-4ebd-a2a7-e79991d13735
+    alb.ingress.kubernetes.io/ssl-redirect: '{"Type":"redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/force-ssl-redirect: "false"
+
+spec:
+  rules:
+    - host: arg.ahnlabcloud.com
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: argocd-server
+              port:
+                number: 443
+                
